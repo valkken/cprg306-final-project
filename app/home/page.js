@@ -62,6 +62,7 @@ export default function HomePage() {
             </p>
 
             <button
+              onClick={() => router.push("/quiz")}
               className="mt-6 rounded-lg bg-white px-6 py-3 font-medium text-black hover:bg-zinc-200"
             >
               Start Quiz
