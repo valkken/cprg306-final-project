@@ -15,6 +15,7 @@ export default function QuizPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showResults, setShowResults] = useState(false);
 
   const QUESTIONS_PER_QUIZ = 15;
 
@@ -23,6 +24,7 @@ export default function QuizPage() {
     setQuizQuestions(shuffled.slice(0, QUESTIONS_PER_QUIZ));
     setCurrentQuestionIndex(0);
     setScore(0);
+    setShowResults(false);
     setLoading(false);
   };
 
@@ -31,9 +33,10 @@ export default function QuizPage() {
   }, []);
 
   const handleAnswerSelection = (selectedOption) => {
-    const isCorrect = selectedOption === quizQuestions[currentQuestionIndex].correctAnswer;
+    const isCorrect =
+      selectedOption === quizQuestions[currentQuestionIndex].correctAnswer;
     const newScore = isCorrect ? score + 1 : score;
-    
+
     if (isCorrect) setScore(newScore);
 
     const nextQuestion = currentQuestionIndex + 1;
@@ -45,22 +48,29 @@ export default function QuizPage() {
     }
   };
 
-  // Loading State - White text on Black
-  if (loading) return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white font-bold text-xl">
-      Loading Quiz...
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center text-white font-bold text-xl">
+        Loading Quiz...
+      </div>
+    );
 
+  if (showResults) {
+    return (
+      <ResultsView
+        score={score}
+        total={QUESTIONS_PER_QUIZ}
+        user={user}
+        onRetry={startQuiz}
+        onHome={() => router.push("/home")}
+      />
+    );
+  }
 
-  // Quiz View
   return (
-    // STRICT BLACK BACKGROUND
     <div className="min-h-screen bg-black text-white p-10 flex flex-col items-center">
-      
       <h1 className="text-4xl font-bold mb-8 tracking-wide">TriviaMaster</h1>
-      
-      {/* User Info - High Contrast */}
+
       {user && (
         <div className="flex flex-col items-center mb-10">
           {user.photoURL && (
@@ -73,12 +83,12 @@ export default function QuizPage() {
             />
           )}
           <p className="text-lg text-gray-300">
-            Player: <span className="font-bold text-white">{user.displayName}</span>
+            Player:{" "}
+            <span className="font-bold text-white">{user.displayName}</span>
           </p>
         </div>
       )}
 
-      {/* Container for Question Card */}
       <div className="w-full max-w-3xl">
         {quizQuestions.length > 0 && (
           <QuestionCard
