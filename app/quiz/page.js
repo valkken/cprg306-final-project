@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useUserAuth } from "../_utils/auth-context";
 import { useRouter } from "next/navigation";
-import QuestionCard from "../components/QuestionCard";
+import QuestionCard from "../components/questionCard";
 import ResultsView from "../components/ResultsView";
 import { questions as allQuestions } from "../data/questions";
 
